@@ -1,0 +1,35 @@
+name: Release CRM Bulk Processor
+on:
+  push:
+    tags:
+      - "v*" # P
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: Creating 'Release' Directory
+        run: mkdir -p release/functions
+      - name: Installing Packages for 'zohocrm_bulk_callback' & Creating the Zip
+        run: cd functions/zohocrm_bulk_callback/ && npm install --omit=dev && zip -r ../../release/functions/zohocrm_bulk_callback.zip .
+      - name: Creating Zip for ReadQueueProcessor
+        run: cd functions/ReadQueueProcessor && zip -r ../../release/functions/ReadQueueProcessor.zip .
+      - name: Creating Zip for BulkJobSchedule
+        run: cd functions/BulkJobSchedule && zip -r ../../release/functions/BulkJobSchedule.zip .
+      - name: Copy Project Template Json
+        run: cp project-template-1.0.0.json release/project-template-1.0.0.json
+      - name: Creating Zip of Release Folder
+        run: cd release && zip -r release.zip .
+
+      # - uses: actions/checkout@v2
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./release/release.zip"
+          bodyFile: "README.md"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.RELEASE_VERSION }}

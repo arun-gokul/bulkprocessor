@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "targets": [
+      "ReadQueueProcessor",
+      "BulkJobSchedule",
+      "zohocrm_bulk_callback"
+    ],
+    "ignore": [
+      ".output"
+    ],
+    "source": "functions"
+  }
+}
