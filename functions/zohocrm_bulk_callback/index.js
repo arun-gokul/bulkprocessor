@@ -14,7 +14,7 @@ app.post("/read", async (req, res) => {
 app.post("/write", async (req, res) => {
   console.log(req.body);
   let data = req.body;
-  if (req.header.CODELIB_SECRET_KEY === process.env[CODELIB_SECRET_KEY]) {
+  if (req.query.CODELIB_SECRET_KEY === process.env[CODELIB_SECRET_KEY]) {
     if (data.state == "COMPLETED") {
       let jobId = data.job_id;
       let operation = data.operation;

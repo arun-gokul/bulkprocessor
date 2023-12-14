@@ -59,7 +59,7 @@ public class CommonUtil {
 
 	public static String getCallBackURL(JSONObject projectData) throws Exception {
 		String domain = ZCProject.getProjectConfig(Long.parseLong(projectData.getString("id"))).getProjectDomain();
-		return domain + "/server/zohocrm_bulk_callback/write";
+		return domain + "/server/zohocrm_bulk_callback/write?CODELIB_SECRET_KEY="+System.getenv("CODELIB_SECRET_KEY");
 	}
 
 	public static ZCRMFieldMeta getFields(String module) throws Exception {
