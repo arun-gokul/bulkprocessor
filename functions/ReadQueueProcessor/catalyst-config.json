@@ -4,8 +4,6 @@
     "stack": "java17",
     "type": "event",
     "env_variables": {
-      "DOMAIN": "YOUR_DOMAIN",
-      "FOLDER_ID": "FOLDER_ID",
       "CRM_CLIENT_ID": "CLIENT_ID",
       "CRM_REFRESH_TOKEN": "REFRESH_TOKEN",
       "CRM_SECRET": "CLIENT_SECRET"

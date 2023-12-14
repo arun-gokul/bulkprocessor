@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.catalyst.Context;
+import com.catalyst.event.EventRequest;
 import com.java.bean.ZCRMFieldMeta;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -52,7 +53,7 @@ public class ZCRMReadQueueProcessor implements ZCRMQueueProcessor{
 	}
 
 	@Override
-	public void process(JSONArray arr) throws Exception {
+	public void process(JSONObject projectData, JSONArray arr) throws Exception {
 		JSONObject ar = arr.getJSONObject(0);
 		if(ar.has(READ_QUEUE.TABLE.value())) {
 			ar = ar.getJSONObject(READ_QUEUE.TABLE.value());
@@ -66,7 +67,7 @@ public class ZCRMReadQueueProcessor implements ZCRMQueueProcessor{
 			ZCRMFieldMeta meta = CommonUtil.getFields(module);
 			List<String> moduleFields = meta.getFields();
 			Long processedLine = (rowObj.get(READ_QUEUE.LINE_PROCESSED.value()) != null) ? Long.parseLong(rowObj.get(READ_QUEUE.LINE_PROCESSED.value()).toString()) : 0;
-			InputStream file = ZCFile.getInstance().getFolderInstance(Long.parseLong(System.getenv(CommonUtil.FOLDER_ID))).downloadFile(Long.parseLong(fileId));
+			InputStream file = ZCFile.getInstance().getFolderInstance("CSVFILES").downloadFile(Long.parseLong(fileId));
 			File targetFile = new File(INPUT_FILE);
 			File outputFile = new File(OUTPUT_FILE);
 			byte[] buffer = new byte[4096];
@@ -144,7 +145,7 @@ public class ZCRMReadQueueProcessor implements ZCRMQueueProcessor{
 	}
 	
 	public static void uploadFile(File file,String module) throws Exception {
-		ZCFileDetail fileDetails = ZCFile.getInstance().getFolderInstance(Long.parseLong(System.getenv(CommonUtil.FOLDER_ID))).uploadFile(file);
+		ZCFileDetail fileDetails = ZCFile.getInstance().getFolderInstance("CSVFILES").uploadFile(file);
 		ZCRowObject fileRow = ZCRowObject.getInstance();
 		fileRow.set(WRITE_QUEUE.FILE_ID.value(), fileDetails.getFileId());
 		fileRow.set(WRITE_QUEUE.MODULE.value(), module);

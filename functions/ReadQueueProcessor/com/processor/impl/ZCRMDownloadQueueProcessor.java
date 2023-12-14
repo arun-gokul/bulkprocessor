@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -38,7 +37,7 @@ public class ZCRMDownloadQueueProcessor implements ZCRMQueueProcessor{
 	
 
 	@Override
-	public void process(JSONArray arr) throws Exception {
+	public void process(JSONObject projectData,JSONArray arr) throws Exception {
 		ZCProject.initProject();
 		OkHttpClient httpClient = new OkHttpClient();
 		for (int i = 0; i < arr.length(); i++) {
@@ -79,7 +78,7 @@ public class ZCRMDownloadQueueProcessor implements ZCRMQueueProcessor{
 										writer.write(buffer, 0, bytesRead);
 									}
 								}
-								ZCFileDetail fileDetails = ZCFile.getInstance().getFolderInstance(Long.parseLong(System.getenv(CommonUtil.FOLDER_ID))).uploadFile(csvFile);
+								ZCFileDetail fileDetails = ZCFile.getInstance().getFolderInstance("CSVFILES").uploadFile(csvFile);
 								ZCRowObject rowObj = ZCRowObject.getInstance();
 								rowObj.set(READ_QUEUE.FILEID.value(), fileDetails.getFileId());
 								rowObj.set(READ_QUEUE.CRM_JOB_ID.value(), crmJobId);
@@ -97,9 +96,9 @@ public class ZCRMDownloadQueueProcessor implements ZCRMQueueProcessor{
 				
 				Long id = jsonObj.getLong("ROWID");
 				JSONObject callBackObj = new JSONObject();
-				String callBackURL = CommonUtil.getCallBackURL();
+				String callBackURL = CommonUtil.getCallBackURL(projectData);
 				LOGGER.log(Level.SEVERE,"Callback URL"+callBackURL);
-				callBackObj.put("url", CommonUtil.getCallBackURL());
+				callBackObj.put("url", CommonUtil.getCallBackURL(projectData));
 				callBackObj.put("method", "post");
 				JSONObject module = new JSONObject();
 				module.put("api_name", moduleName);

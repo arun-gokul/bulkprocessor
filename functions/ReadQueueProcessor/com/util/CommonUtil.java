@@ -9,12 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.catalyst.config.ZCThreadLocal;
 import com.java.bean.ZCRMFieldMeta;
 import com.zc.auth.connectors.ZCConnection;
 import com.zc.auth.connectors.ZCConnector;
+import com.zc.common.ZCProject;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -55,8 +57,8 @@ public class CommonUtil {
 
 	}
 
-	public static String getCallBackURL() {
-		String domain = System.getenv("DOMAIN");
+	public static String getCallBackURL(JSONObject projectData) throws Exception {
+		String domain = ZCProject.getProjectConfig(Long.parseLong(projectData.getString("id"))).getProjectDomain();
 		return domain + "/server/zohocrm_bulk_callback/write";
 	}
 

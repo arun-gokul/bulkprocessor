@@ -35,7 +35,7 @@ public class ZCRMUploadQueueProcessor implements ZCRMQueueProcessor {
 	private static final Logger LOGGER = Logger.getLogger(ZCRMUploadQueueProcessor.class.getName());
 
 	@Override
-	public void process(JSONArray arr) throws Exception {
+	public void process(JSONObject projectData, JSONArray arr) throws Exception {
 
 		OkHttpClient httpClient = new OkHttpClient();
 		for (int i = 0; i < arr.length(); i++) {
@@ -52,7 +52,7 @@ public class ZCRMUploadQueueProcessor implements ZCRMQueueProcessor {
 				continue;
 			}
 			InputStream file = ZCFile.getInstance()
-					.getFolderInstance(Long.parseLong(System.getenv(CommonUtil.FOLDER_ID))).downloadFile(fileID);
+					.getFolderInstance("CSVFILES").downloadFile(fileID);
 			File csvFile = new File("/tmp/data.csv");
 			try (FileOutputStream csvOutputStream = new FileOutputStream(csvFile)) {
 				byte[] buffer = new byte[4096];
