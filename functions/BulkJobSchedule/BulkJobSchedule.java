@@ -15,13 +15,12 @@ import com.zc.component.object.ZCRowObject;
 public class BulkJobSchedule implements CatalystCronHandler {
 
 	private static final Logger LOGGER = Logger.getLogger(BulkJobSchedule.class.getName());
-	
-	private static final String[] MODULES = new String[] {"Leads"};
 
 	@Override
 	public CRON_STATUS handleCronExecute(CronRequest request, Context arg1) throws Exception {
 		try {
 			ZCProject.initProject();
+			String[] MODULES = System.getenv("MODULES").split(",");
 			for(String module:MODULES) {
 				ZCRowObject row = ZCRowObject.getInstance();
 				row.set("MODULE_NAME", module);
