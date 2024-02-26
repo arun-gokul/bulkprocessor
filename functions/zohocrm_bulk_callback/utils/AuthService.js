@@ -5,7 +5,7 @@ class AuthService {
     return (
       key &&
       key !== this.#DefaultKey &&
-      key === process.env["CODELIB_SECRET_KEY"]
+      key === process.env.CODELIB_SECRET_KEY
     )
   }
 

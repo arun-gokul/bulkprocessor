@@ -1,13 +1,13 @@
 {
   "deployment": {
-    "name": "BulkJobSchedule",
+    "name": "BulkJobScheduler",
     "stack": "java17",
     "type": "cron",
     "env_variables": {
-      "Modules": "Leads"
+      "MODULES": "Leads"
     }
   },
   "execution": {
-    "main": "BulkJobSchedule"
+    "main": "BulkJobScheduler"
   }
 }

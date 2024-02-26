@@ -14,7 +14,7 @@
           },
           "configuration": {
             "environment": {
-              "variables": {}
+              "variables": { "CODELIB_SECRET_KEY": "YOUR_CODELIB_SECRET_KEY" }
             },
             "memory": 256
           },
@@ -25,45 +25,44 @@
       },
       {
         "type": "function",
-        "name": "ReadQueueProcessor",
+        "name": "BulkDataProcessor",
         "properties": {
           "stack": "java17",
           "code": {
-            "path": "functions/ReadQueueProcessor.zip"
+            "path": "functions/BulkDataProcessor.zip"
           },
           "configuration": {
             "environment": {
               "variables": {
-                "DOMAIN": "YOUR_DOMAIN",
-                "FOLDER_ID": "FOLDER_ID",
-                "CRM_CLIENT_ID": "CLIENT_ID",
-                "CRM_REFRESH_TOKEN": "REFRESH_TOKEN",
-                "CRM_SECRET": "CLIENT_SECRET"
+                "CODELIB_SECRET_KEY": "YOUR_CODELIB_SECRET_KEY",
+                "CLIENT_ID": "CLIENT_ID",
+                "REFRESH_TOKEN": "REFRESH_TOKEN",
+                "CLIENT_SECRET": "CLIENT_SECRET"
               }
             },
             "memory": 256
           },
           "type": "event",
-          "name": "ReadQueueProcessor"
+          "name": "BulkDataProcessor"
         },
         "dependsOn": []
       },
       {
         "type": "function",
-        "name": "BulkJobSchedule",
+        "name": "BulkJobScheduler",
         "properties": {
           "stack": "java17",
           "code": {
-            "path": "functions/BulkJobSchedule.zip"
+            "path": "functions/BulkJobScheduler.zip"
           },
           "configuration": {
             "environment": {
-              "variables": {}
+              "variables": { "MODULES": "Leads" }
             },
             "memory": 256
           },
           "type": "cron",
-          "name": "BulkJobSchedule"
+          "name": "BulkJobScheduler"
         },
         "dependsOn": []
       }
@@ -71,14 +70,14 @@
     "Cron": [
       {
         "type": "cron",
-        "name": "DailyCron",
+        "name": "BulkProcessScheduler",
         "properties": {
           "cron_url_details": {
             "headers": {},
             "params": {},
             "url": ""
           },
-          "cron_function_identifier": "BulkJobSchedule",
+          "cron_function_identifier": "BulkJobScheduler",
           "end_time": -1,
           "description": "",
           "cron_name": "DailyCron",
@@ -92,7 +91,7 @@
           "cron_type": "Calendar",
           "status": true
         },
-        "dependsOn": ["Functions.function.BulkJobSchedule"]
+        "dependsOn": ["Functions.function.BulkJobScheduler"]
       }
     ],
     "Filestore": [
@@ -550,10 +549,10 @@
     "EventListeners": [
       {
         "type": "rules",
-        "name": "Sample",
+        "name": "ZohoCRMDataProcessor",
         "properties": {
           "listener_name": "Default",
-          "rule_name": "Sample",
+          "rule_name": "ZohoCRMDataProcessor",
           "description": "",
           "source_type": "Datastore",
           "source": [
@@ -569,14 +568,14 @@
           ],
           "target": [
             {
-              "entity_identifier": "ReadQueueProcessor",
+              "entity_identifier": "BulkDataProcessor",
               "target_type": "Function"
             }
           ],
           "action": ["Insert", "Update"],
           "status": true
         },
-        "dependsOn": ["Functions.function.ReadQueueProcessor"]
+        "dependsOn": ["Functions.function.BulkDataProcessor"]
       }
     ]
   }

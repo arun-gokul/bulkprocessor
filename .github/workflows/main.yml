@@ -1,35 +1,57 @@
-name: Release CRM Bulk Processor
+name: Zoho CRM Bulk Data Processor Release
+
 on:
   push:
     tags:
       - "v*" # P
-
 jobs:
   build:
+    environment: Production
+    name: 'Creating Zoho CRM Bulk Data Processor Release'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js
+      - name: Cloning repository
+        uses: actions/checkout@v2
+      - name: Installing node-18
         uses: actions/setup-node@v2
         with:
-          node-version: "16"
-      - name: Creating 'Release' Directory
-        run: mkdir -p release/functions
-      - name: Installing Packages for 'zohocrm_bulk_callback' & Creating the Zip
-        run: cd functions/zohocrm_bulk_callback/ && npm install --omit=dev && zip -r ../../release/functions/zohocrm_bulk_callback.zip .
-      - name: Creating Zip for ReadQueueProcessor
-        run: cd functions/ReadQueueProcessor && zip -r ../../release/functions/ReadQueueProcessor.zip .
-      - name: Creating Zip for BulkJobSchedule
-        run: cd functions/BulkJobSchedule && zip -r ../../release/functions/BulkJobSchedule.zip .
-      - name: Copy Project Template Json
-        run: cp project-template-1.0.0.json release/project-template-1.0.0.json
-      - name: Creating Zip of Release Folder
-        run: cd release && zip -r release.zip .
-
-      # - uses: actions/checkout@v2
-      - uses: ncipollo/release-action@v1
+          node-version: '18'
+      - name: Installing java-17
+        uses: actions/setup-java@v4.0.0
         with:
-          artifacts: "./release/release.zip"
-          bodyFile: "README.md"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          java-version: '17'
+          distribution: 'oracle'
+      - name: Installing Catalyst CLI
+        run: npm i -g zcatalyst-cli@1.17.3
+      - name: Downloading dependencies for BulkDataProcessor
+        working-directory: ./functions/BulkDataProcessor
+        run: mvn org.apache.maven.plugins:maven-dependency-plugin:copy-dependencies@download-dependencies && rm ./pom.xml
+      - name: Downloading dependencies for BulkJobScheduler
+        working-directory: ./functions/BulkJobScheduler
+        run: mvn org.apache.maven.plugins:maven-dependency-plugin:copy-dependencies@download-dependencies && rm ./pom.xml
+      - name: Downloading dependencies for zohocrm_bulk_callback
+        working-directory: ./functions/zohocrm_bulk_callback
+        run: npm install --omit=dev
+      - name: Deploying to Catalyst
+        run: catalyst deploy --project ${{ secrets.CATALYST_PROJECT_NAME }} --org ${{ secrets.CATALYST_ORG }} --token ${{ secrets.CATALYST_TOKEN }}
+      - name: Creating release directory
+        run: mkdir -p release/functions
+      - name: Creating a zip for BulkDataProcessor
+        working-directory: ./functions/BulkDataProcessor/.output
+        run: zip -r ../../../release/functions/BulkDataProcessor.zip .
+      - name: Creating a zip for BulkJobScheduler
+        working-directory: ./functions/BulkJobScheduler/.output
+        run: zip -r ../../../release/functions/BulkJobScheduler.zip .
+      - name: Creating a zip for zohocrm_bulk_callback
+        working-directory: ./functions/zohocrm_bulk_callback
+        run: zip -r ../../release/functions/zohocrm_bulk_callback.zip .
+      - name: Copying project-template-1.0.0.json
+        run: cp project-template-1.0.0.json release/project-template-1.0.0.json
+      - name: Generating release
+        run: cd release && zip -r release.zip .
+      - name: Generating artifacts
+        uses: ncipollo/release-action@v1
+        with:
+          draft: true
           tag: ${{ env.RELEASE_VERSION }}
+          artifacts: "./release/release.zip"

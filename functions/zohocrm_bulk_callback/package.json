@@ -2,10 +2,10 @@
 	"name": "zohocrm_bulk_callback",
 	"version": "1.0.0",
 	"main": "index.js",
-	"author": "aravind.siva@zohocorp.com",
+	"author": "solutions@zohocatalyst.com",
 	"dependencies": {
 		"express": "^4.18.2",
 		"validator": "^13.11.0",
-		"zcatalyst-sdk-node": "latest"
+		"zcatalyst-sdk-node": "2.5.1"
 	}
 }

@@ -11,9 +11,9 @@ import com.zc.common.ZCProject;
 import com.zc.component.object.ZCObject;
 import com.zc.component.object.ZCRowObject;
 
-public class BulkJobSchedule implements CatalystCronHandler {
+public class BulkJobScheduler implements CatalystCronHandler {
 
-	private static final Logger LOGGER = Logger.getLogger(BulkJobSchedule.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(BulkJobScheduler.class.getName());
  
 	@Override
 	public CRON_STATUS handleCronExecute(CronRequest request, Context arg1) throws Exception {
