@@ -1,11 +1,13 @@
 {
-	"deployment": {
-		"name": "BulkJobSchedule",
-		"stack": "java17",
-		"type": "cron",
-		"env_variables": {}
-	},
-	"execution": {
-		"main": "BulkJobSchedule"
-	}
+  "deployment": {
+    "name": "BulkJobSchedule",
+    "stack": "java17",
+    "type": "cron",
+    "env_variables": {
+      "Modules": "Leads"
+    }
+  },
+  "execution": {
+    "main": "BulkJobSchedule"
+  }
 }

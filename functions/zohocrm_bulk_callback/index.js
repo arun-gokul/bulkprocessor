@@ -1,51 +1,52 @@
 "use strict";
-
 const express = require("express");
 const catalyst = require("zcatalyst-sdk-node");
+
+const ErrorHandler = require("./utils/ErrorHandler");
+const AuthService = require("./utils/AuthService");
+const ZohoCRMUtil = require("./utils/ZohoCRMUtil");
+const AppError = require("./utils/AppError");
 
 const app = express();
 app.use(express.json());
 
-app.post("/read", async (req, res) => {
-  console.log(req.body);
-  res.status(200).send("I am Live and Ready.");
-});
+app.post("/job", async (req, res) => {
+  try {
+    const catalystApp = catalyst.initialize(req);
+    if (
+      !AuthService.getInstance().isValidRequest(
+        req.query["catalyst-codelib-secret-key"]
+      )
+    ) {
+      throw new AppError(
+        401,
+        "You don't have permission to perform this operation. Kindly contact your administrator for more details."
+      );
+    }
+    const payload = req.body;
+    ZohoCRMUtil.validatePayload(payload);
 
-app.post("/write", async (req, res) => {
-  console.log(req.body);
-  let data = req.body;
-  if (req.query.CODELIB_SECRET_KEY === process.env[CODELIB_SECRET_KEY]) {
-    if (data.state == "COMPLETED") {
-      let jobId = data.job_id;
-      let operation = data.operation;
-      let downloadURL = data.result.download_url;
-      let page = data.result.page;
-      let newPage = page;
-      downloadURL = "https://zohoapis.com" + downloadURL;
-      let more_records = data.result.more_records;
-      console.log(more_records);
-      if (more_records) {
-        newPage = newPage + 1;
-      }
-      const catalystApp = catalyst.initialize(req);
-      if (operation == "read") {
-        let res = await catalystApp
+    if (payload.state == "COMPLETED") {
+      const page = payload.result?.page;
+      const requestedPageNo = payload.result?.more_records ? page + 1 : page;
+      const downloadURL = ZohoCRMUtil.buildDownloadURL(payload.result.download_url);
+
+      if (payload.operation == "read") {
+        await catalystApp
           .zcql()
           .executeZCQLQuery(
-            "update BulkRead set DOWNLOAD_URL='" +
-              downloadURL +
-              "',REQUESTED_PAGE_NO='" +
-              newPage +
-              "' where CRMJOBID='" +
-              jobId +
-              "'"
+            `UPDATE BulkRead SET DOWNLOAD_URL='${downloadURL}',REQUESTED_PAGE_NO='${requestedPageNo}' WHERE CRMJOBID='${payload.job_id}'`
           );
-        console.log(res);
       }
     }
-    res.status(200);
-  } else {
-    res.status(401).send("You are unauthorised to perform this action");
+    res.status(200).send({
+      status: "success",
+      message: "Data processed successfully",
+    });
+  } catch (error) {
+    const { statusCode, ...others } =
+      ErrorHandler.getInstance().processError(error);
+    res.status(statusCode).send(others);
   }
 });
 

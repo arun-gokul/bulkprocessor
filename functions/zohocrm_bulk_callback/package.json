@@ -5,6 +5,7 @@
 	"author": "aravind.siva@zohocorp.com",
 	"dependencies": {
 		"express": "^4.18.2",
+		"validator": "^13.11.0",
 		"zcatalyst-sdk-node": "latest"
 	}
 }
