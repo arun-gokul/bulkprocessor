@@ -3,3 +3,5 @@
 .catalystrc
 **/.project
 **/.output
+**/*.class
+**/lib

@@ -2,6 +2,7 @@
 package com.util;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,9 +28,9 @@ public class CommonUtil {
 
 	@SuppressWarnings("unchecked")
 	public static String getCRMAccessToken() throws Exception {
-		String clientId = System.getenv("CRM_CLIENT_ID");
-		String clientSecret = System.getenv("CRM_SECRET");
-		String refreshToken = System.getenv("CRM_REFRESH_TOKEN");
+		String clientId = System.getenv("CLIENT_ID");
+		String clientSecret = System.getenv("CLIENT_SECRET");
+		String refreshToken = System.getenv("REFRESH_TOKEN");
 
 		org.json.simple.JSONObject authJson = new org.json.simple.JSONObject();
 		// The json object holds the client id, client secret, refresh token and refresh
@@ -41,6 +42,8 @@ public class CommonUtil {
 		authJson.put("refresh_token", refreshToken);
 		org.json.simple.JSONObject connectorJson = new org.json.simple.JSONObject();
 		connectorJson.put("CRMConnector", authJson);
+
+		System.out.println(connectorJson.toJSONString());
 
 		ZCConnection conn = ZCConnection.getInstance(connectorJson);
 		ZCConnector crmConnector = conn.getConnector("CRMConnector");
