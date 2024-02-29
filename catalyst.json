@@ -2,7 +2,7 @@
   "functions": {
     "targets": [
       "BulkDataProcessor",
-      "BulkJobSchedule",
+      "BulkJobScheduler",
       "zohocrm_bulk_callback"
     ],
     "ignore": [".output"],
