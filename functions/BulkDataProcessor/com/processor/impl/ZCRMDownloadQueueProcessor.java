@@ -51,6 +51,7 @@ public class ZCRMDownloadQueueProcessor implements ZCRMQueueProcessor {
 					&& rowData.get(BULK_READ.CRMJOBID.value()) != JSONObject.NULL)
 							? rowData.getString(BULK_READ.CRMJOBID.value())
 							: null;
+			String[] fieldsToBeProcessed = rowData.get(BULK_READ.FIELDS_TO_BE_PROCESSED.value()).toString().split(",");
 			String accessToken = CommonUtil.getCRMAccessToken();
 			if (crmJobId != null && downloadURL != null) {
 				Request downloadURLReq = new Request.Builder().url(downloadURL)
@@ -108,13 +109,14 @@ public class ZCRMDownloadQueueProcessor implements ZCRMQueueProcessor {
 
 				JSONObject query = new JSONObject();
 				query.put("module", module);
+				query.put("fields", fieldsToBeProcessed);
 
 				JSONObject input = new JSONObject();
 				input.put("callback", callBackObj);
 				input.put("query", query);
 				input.put("file_type", "csv");
 
-				Request request = new Request.Builder().url(CommonUtil.CRM_BULK_WRITE_URL)
+				Request request = new Request.Builder().url(CommonUtil.CRM_BULK_READ_URL)
 						.addHeader("Authorization", accessToken)
 						.method("POST", RequestBody.create(MediaType.parse("application/json"), input.toString()))
 						.build();

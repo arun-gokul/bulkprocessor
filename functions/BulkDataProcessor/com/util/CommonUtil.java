@@ -2,7 +2,6 @@
 package com.util;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,9 +18,9 @@ import okhttp3.Response;
 public class CommonUtil {
 
 	public static final String CRM_UPLOAD_URL = "https://content.zohoapis.com/crm/v5/upload";
-	public static final String CRM_BULK_READ_URL = "https://zohoapis.com/crm/bulk/v5/write";
+	public static final String CRM_BULK_READ_URL = "https://zohoapis.com/crm/bulk/v5/read";
 	public static final String CRM_ORG_GET_URL = "https://zohoapis.com/crm/v5/org";
-	public static final String CRM_BULK_WRITE_URL = "https://zohoapis.com/crm/bulk/v5/read";
+	public static final String CRM_BULK_WRITE_URL = "https://zohoapis.com/crm/bulk/v5/write";
 	public static final String CRM_FIELD_API = "https://zohoapis.com/crm/v5/settings/fields";
 	public static final String BULK_READ = "BulkRead";
 	public static final String CSVFILES = "CSVFILES";
@@ -42,8 +41,6 @@ public class CommonUtil {
 		authJson.put("refresh_token", refreshToken);
 		org.json.simple.JSONObject connectorJson = new org.json.simple.JSONObject();
 		connectorJson.put("CRMConnector", authJson);
-
-		System.out.println(connectorJson.toJSONString());
 
 		ZCConnection conn = ZCConnection.getInstance(connectorJson);
 		ZCConnector crmConnector = conn.getConnector("CRMConnector");

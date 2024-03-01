@@ -4,7 +4,7 @@
     "stack": "java17",
     "type": "event",
     "env_variables": {
-      "CODELIB_SECRET_KEY": "YOUR_CODELIB_SECRET_KEY",
+      "CODELIB_SECRET_KEY": "CODELIB_FAKE_KEY",
       "CLIENT_ID": "CLIENT_ID",
       "REFRESH_TOKEN": "REFRESH_TOKEN",
       "CLIENT_SECRET": "CLIENT_SECRET"

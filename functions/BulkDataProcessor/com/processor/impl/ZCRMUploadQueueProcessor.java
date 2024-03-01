@@ -127,7 +127,7 @@ public class ZCRMUploadQueueProcessor implements ZCRMQueueProcessor {
 				}
 				resourceArr.put(resourceObj);
 				bulkWriteInput.put("resource", resourceArr);
-				Request bulkWriteRequest = new Request.Builder().url(CommonUtil.CRM_BULK_READ_URL)
+				Request bulkWriteRequest = new Request.Builder().url(CommonUtil.CRM_BULK_WRITE_URL)
 						.addHeader("Authorization", accessToken)
 						.method("POST",
 								RequestBody.create(MediaType.parse("application/json"), bulkWriteInput.toString()))

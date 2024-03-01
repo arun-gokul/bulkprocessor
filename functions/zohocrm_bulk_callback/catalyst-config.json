@@ -4,7 +4,7 @@
     "stack": "node18",
     "type": "advancedio",
     "env_variables": {
-      "CODELIB_SECRET_KEY": "YOUR_CODELIB_SECRET_KEY"
+      "CODELIB_SECRET_KEY": "CODELIB_FAKE_KEY"
     }
   },
   "execution": {
