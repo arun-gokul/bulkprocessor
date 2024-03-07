@@ -64,10 +64,8 @@ The following Catalyst resources are auto-configured and used as a part of the Z
    - The BulkDataProcessor(Event) function contains the logic to be executed on the occurrence of insertion or updation events in the BulkRead, ReadQueue, WriteQueue tables in the Catalyst DataStore.
    - The zohocrm_bulk_callback(Advanced I/O) function contains the definitions of the callback operations /read and /write, that are executed when performing bulk read and write operations with Zoho CRM data.
 
-2. [Catalyst Cloud Scale Cron](https://docs.catalyst.zoho.com/en/cloud-scale/help/cron/introduction/): A cron job is auto-scheduled in the Catalyst Cron component on installation of the CodeLib solution. This job runs on a daily basis and executes the associated cron function(BulkJobSchedule). This cron job also ensures that the latest updated CRM records are processed every day.
+2. [Catalyst Cloud Scale Data Store](https://docs.catalyst.zoho.com/en/cloud-scale/help/data-store/introduction/): Three tables named BulkRead, ReadQueue, WriteQueue will be auto-created and configured on installation of the CodeLib solution. An event rule is associated with the tables and on occurrences of INSERT or UPDATE, the event function(BulkDataProcessor) gets triggered.
 
-3. [Catalyst Cloud Scale Data Store](https://docs.catalyst.zoho.com/en/cloud-scale/help/data-store/introduction/): Three tables named BulkRead, ReadQueue, WriteQueue will be auto-created and configured on installation of the CodeLib solution. An event rule is associated with the tables and on occurrences of INSERT or UPDATE, the event function(BulkDataProcessor) gets triggered.
+3. [Catalyst Cloud Scale Event Listener](https://catalyst.zoho.com/help/event-listeners.html): A rule in the Catalyst Component Event Listener of your project will be auto-created and configured.
 
-4. [Catalyst Cloud Scale Event Listener](https://catalyst.zoho.com/help/event-listeners.html): A rule in the Catalyst Component Event Listener of your project will be auto-created and configured.
-
-5. [Catalyst Cloud Scale File Store](https://catalyst.zoho.com/help/file-store.html): The records from the CRM module will be stored temporarily under a folder named csvfiles in the Catalyst FileStore during processing of the data.
+4. [Catalyst Cloud Scale File Store](https://catalyst.zoho.com/help/file-store.html): The records from the CRM module will be stored temporarily under a folder named csvfiles in the Catalyst FileStore during processing of the data.
